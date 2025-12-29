@@ -1,6 +1,6 @@
 services:
   - type: web
-    name: telegram-dating-bot
+    name: homogenous-bot
     env: python
     buildCommand: pip install -r requirements.txt
     startCommand: python bot.py
@@ -9,10 +9,10 @@ services:
         sync: false
       - key: DATABASE_URL
         fromDatabase:
-          name: dating-bot-db
+          name: homogenous-bot-db
           property: connectionString
 
 databases:
-  - name: dating-bot-db
-    databaseName: dating_bot
+  - name: homogenous-bot-db
+    databaseName: homogenous_bot
     user: bot_user
