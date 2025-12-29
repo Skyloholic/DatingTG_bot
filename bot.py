@@ -33,6 +33,8 @@ def init_pool():
         raise
 
 def get_db():
+    if not db_pool:
+        return None
     try:
         return db_pool.getconn()
     except Exception as e:
@@ -99,6 +101,8 @@ def init_db():
 
 # Helper functions
 def user_exists(user_id):
+    if not db_pool:
+        return False
     conn = get_db()
     try:
         cur = conn.cursor()
@@ -597,11 +601,12 @@ async def error_handler(update: object, context: ContextTypes.DEFAULT_TYPE):
 
 def main():
     try:
-        # Initialize connection pool
-        init_pool()
-        
-        # Initialize database
-        init_db()
+        # Initialize connection pool only if DATABASE_URL is set
+        if DATABASE_URL:
+            init_pool()
+            init_db()
+        else:
+            logger.warning("DATABASE_URL not set. Running without database. Add PostgreSQL to Railway.")
         
         # Create application
         app = Application.builder().token(TOKEN).build()
